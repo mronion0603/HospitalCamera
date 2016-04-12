@@ -1,15 +1,24 @@
 package lc.main.hospitalcamera;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.PixelFormat;
+import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
+import android.hardware.Camera.Size;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -20,11 +29,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import lc.main.hospitalcamera.R;
 
-public class MainActivity extends Activity{
+public class MainActivity extends Activity implements SurfaceHolder.Callback{
     private Button choosePic;
     private LinearLayout preLl;
     private RelativeLayout afterLl;
     private RelativeLayout titleRl;
+	Camera myCamera;
+	SurfaceView mySurfaceView;
+	SurfaceHolder mySurfaceHolder;
+	int mwidth;
+	int mheight;
+	private boolean mPreviewRunning= false; 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,20 +53,23 @@ public class MainActivity extends Activity{
 		preLl = (LinearLayout)findViewById(R.id.prell);
 		afterLl = (RelativeLayout)findViewById(R.id.afterll);
 		titleRl = (RelativeLayout)findViewById(R.id.rlTitle);
+		mySurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+	    mySurfaceHolder = mySurfaceView.getHolder();//获得SurfaceHolder
+	    mySurfaceHolder.addCallback(this);
+	    mySurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		ButtonEffect.setButtonStateChangeListener(choosePic);
 		choosePic.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
+				
 				Intent intent = new Intent();
-				 /* 开启Pictures画面Type设定为image */  
                 intent.setType("image/*");  
-                /* 使用Intent.ACTION_GET_CONTENT这个Action */  
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                
-                /* 取得相片后返回本画面 */  
                 startActivityForResult(intent, 1);  
+			    
 			}
 		});
+		
 	}
 	
 	@Override  
@@ -64,7 +82,7 @@ public class MainActivity extends Activity{
             titleRl.setVisibility(View.GONE);
             ImageView imageView = (ImageView) findViewById(R.id.iv01);  
             ContentResolver cr = this.getContentResolver();  
-            
+        
             try {  
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));  
                 WindowManager wm = this.getWindowManager();
@@ -79,6 +97,7 @@ public class MainActivity extends Activity{
                 }
                 smallBitmap = rotateBitmap(smallBitmap,degree) ;
                 imageView.setImageBitmap(smallBitmap);  
+                imageView.setAlpha(50);
                 
             } catch (FileNotFoundException e) {  
                 Log.e("Exception", e.getMessage(),e);  
@@ -89,6 +108,7 @@ public class MainActivity extends Activity{
         }  
         super.onActivityResult(requestCode, resultCode, data);  
     }  
+	
 	public static Bitmap zoomVImage(Bitmap bgimage, double newHeight) {
 		// 获取这个图片的宽和高
 	    float width = bgimage.getWidth();
@@ -138,30 +158,46 @@ public class MainActivity extends Activity{
         Matrix mtx = new Matrix();  
         mtx.postRotate(rotate);  
         return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);  
-    }  
+    }
 
-    /*
-	public static String getRealFilePath( final Context context, final Uri uri ) {  
-	    if ( null == uri ) return null;  
-	    final String scheme = uri.getScheme();  
-	    String data = null;  
-	    if ( scheme == null )  
-	        data = uri.getPath();  
-	    else if ( ContentResolver.SCHEME_FILE.equals( scheme ) ) {  
-	        data = uri.getPath();  
-	    } else if ( ContentResolver.SCHEME_CONTENT.equals( scheme ) ) {  
-	        Cursor cursor = context.getContentResolver().query( uri, new String[] { ImageColumns.DATA }, null, null, null );  
-	        if ( null != cursor ) {  
-	            if ( cursor.moveToFirst() ) {  
-	                int index = cursor.getColumnIndex( ImageColumns.DATA );  
-	                if ( index > -1 ) {  
-	                    data = cursor.getString( index );  
-	                }  
-	            }  
-	            cursor.close();  
+	@Override
+	public void surfaceChanged(SurfaceHolder arg0, int format, int width,
+			int height) {
+		// TODO Auto-generated method stub
+		 this.mwidth = width;  
+		 this.mheight = height;  
+		 if (mPreviewRunning) {  
+			 myCamera.stopPreview();  
 	        }  
-	    }  
-	    return data;  
-	} 
-	*/ 
+	        Parameters params = myCamera.getParameters();  
+	        params.setPictureFormat(PixelFormat.JPEG);// 设置图片格式  
+	        //params.setPreviewSize(width, height);  
+	        myCamera.setDisplayOrientation(90);
+	        myCamera.cancelAutoFocus();//只有加上了这一句，才会自动对焦。  
+	        myCamera.setParameters(params);  
+	        try {  
+	        	myCamera.setPreviewDisplay(mySurfaceHolder);  
+	        } catch (IOException e) {  
+	            e.printStackTrace();  
+	        }  
+	        myCamera.startPreview();  
+	        mPreviewRunning = true;  
+	}
+	
+	@Override
+	public void surfaceCreated(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
+		myCamera = Camera.open();  
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
+		myCamera.stopPreview();  
+        mPreviewRunning = false;  
+        myCamera.release();  
+        myCamera = null;  
+	}  
+
+    
 }
