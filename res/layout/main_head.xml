@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dip"
+    android:background="@color/text_green" 
+    android:id="@+id/rlTitle"
+    >
+    <RelativeLayout
+    android:id="@+id/rlslidemenu"
+    android:layout_width="50dip"
+    android:layout_height="50dip"
+    android:background="@drawable/background_selector"
+    >
+    <ImageView
+        android:id="@+id/topButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+      
+        android:visibility="gone"
+        />
+     <ImageView
+        android:id="@+id/ArrowHead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+    
+        android:visibility="gone"
+        />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/topTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/name"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        />
+    <RelativeLayout
+    android:id="@+id/rlitinerary"
+    android:layout_width="50dip"
+    android:layout_height="50dip"
+    android:layout_alignParentRight="true"
+    android:background="@drawable/background_selector"
+    android:visibility="gone"
+    >
+       <ImageView
+        android:id="@+id/topButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+       
+        android:visibility="gone"
+       />
+</RelativeLayout>
+        <ImageView
+        android:id="@+id/topButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        
+        android:visibility="gone"
+       />
+       <TextView
+        android:id="@+id/righttext"
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@drawable/background_selector"
+       />
+       <TextView
+        android:id="@+id/righttext2"
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+       
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@drawable/background_selector"
+       />
+</RelativeLayout>
