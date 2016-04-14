@@ -2,8 +2,6 @@ package lc.main.hospitalcamera;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -16,30 +14,41 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import lc.main.hospitalcamera.R;
 
-public class MainActivity extends Activity implements SurfaceHolder.Callback{
-    private Button choosePic;
+public class MainActivity extends Activity implements SurfaceHolder.Callback,OnTouchListener{
+    private Button choosePic,setScale,enterBt,confirm,cancel,trim;
     private LinearLayout preLl;
+    private LinearLayout preUp,preDown;
     private RelativeLayout afterLl;
     private RelativeLayout titleRl;
+    ImageView imageView ;  
+    private ImageView myImageView;
 	Camera myCamera;
 	SurfaceView mySurfaceView;
 	SurfaceHolder mySurfaceHolder;
+	//private MySurfaceView dotSurfaceView = null;
 	int mwidth;
 	int mheight;
 	private boolean mPreviewRunning= false; 
+	private int screenWidth;
+	private int screenHeight;
+	private int lastX, lastY;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,27 +58,130 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	}
 	
 	public void init(){
+		imageView = (ImageView)findViewById(R.id.iv01);
 		choosePic = (Button)findViewById(R.id.choosePic);
+		setScale = (Button)findViewById(R.id.setScale);
+		enterBt = (Button)findViewById(R.id.enter);
+		confirm = (Button)findViewById(R.id.confirm);
+		cancel = (Button)findViewById(R.id.cancel);
+		trim = (Button)findViewById(R.id.trim);
 		preLl = (LinearLayout)findViewById(R.id.prell);
+		preUp = (LinearLayout)findViewById(R.id.preUp);
+		preDown = (LinearLayout)findViewById(R.id.preDown);
 		afterLl = (RelativeLayout)findViewById(R.id.afterll);
 		titleRl = (RelativeLayout)findViewById(R.id.rlTitle);
 		mySurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
 	    mySurfaceHolder = mySurfaceView.getHolder();//获得SurfaceHolder
 	    mySurfaceHolder.addCallback(this);
 	    mySurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+	  
 		ButtonEffect.setButtonStateChangeListener(choosePic);
+		ButtonEffect.setButtonStateChangeListener(setScale);
+		ButtonEffect.setButtonStateChangeListener(enterBt);
+		ButtonEffect.setButtonStateChangeListener(confirm);
+		ButtonEffect.setButtonStateChangeListener(cancel);
+		ButtonEffect.setButtonStateChangeListener(trim);
+		this.myImageView = (ImageView) this.findViewById(R.id.ImageView);
+		this.myImageView.setOnTouchListener(this);
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+		screenWidth = dm.widthPixels;
+		screenHeight = dm.heightPixels - 150;
 		choosePic.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				
 				Intent intent = new Intent();
                 intent.setType("image/*");  
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, 1);  
-			    
 			}
 		});
-		
+		setScale.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				setScale.setVisibility(View.GONE);
+				enterBt.setVisibility(View.GONE);
+				titleRl.setVisibility(View.GONE);
+				mySurfaceView.setVisibility(View.GONE);
+				imageView.setAlpha(255);
+				myImageView.setVisibility(View.VISIBLE);
+				Toast.makeText(MainActivity.this, "请设置起始点", Toast.LENGTH_SHORT).show();
+				preUp.setVisibility(View.VISIBLE);
+				preDown.setVisibility(View.VISIBLE);
+			}
+		});
+		enterBt.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				setScale.setVisibility(View.GONE);
+				enterBt.setVisibility(View.GONE);
+				titleRl.setVisibility(View.GONE);
+			}
+		});
+		confirm.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});
+		cancel.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});
+		trim.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});
+	}
+	
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			lastX = (int) event.getRawX();
+			lastY = (int) event.getRawY();
+			break;
+		case MotionEvent.ACTION_MOVE:
+			int dx = (int) event.getRawX() - lastX;
+			int dy = (int) event.getRawY() - lastY;
+
+			int left = v.getLeft() + dx;
+			int top = v.getTop() + dy;
+			int right = v.getRight() + dx;
+			int bottom = v.getBottom() + dy;
+          
+			// 设置不能出界
+			if (left < 0) {
+				left = 0;
+				right = left + v.getWidth();
+			}
+
+			if (right > screenWidth) {
+				right = screenWidth;
+				left = right - v.getWidth();
+			}
+
+			if (top < 0) {
+				top = 0;
+				bottom = top + v.getHeight();
+			}
+
+			if (bottom > screenHeight) {
+				bottom = screenHeight;
+				top = bottom - v.getHeight();
+			}
+			v.layout(left, top, right, bottom);
+
+			lastX = (int) event.getRawX();
+			lastY = (int) event.getRawY();
+
+			break;
+		case MotionEvent.ACTION_UP:
+			break;
+		}
+		return true;
 	}
 	
 	@Override  
@@ -79,8 +191,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
             
             preLl.setVisibility(View.GONE);
             afterLl.setVisibility(View.VISIBLE);
-            titleRl.setVisibility(View.GONE);
-            ImageView imageView = (ImageView) findViewById(R.id.iv01);  
+            
             ContentResolver cr = this.getContentResolver();  
         
             try {  
@@ -199,5 +310,4 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
         myCamera = null;  
 	}  
 
-    
 }
