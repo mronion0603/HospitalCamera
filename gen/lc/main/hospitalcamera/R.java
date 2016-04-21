@@ -55,38 +55,50 @@ public final class R {
     public static final class drawable {
         public static final int background_selector=0x7f020000;
         public static final int btn2=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int pin2=0x7f020003;
+        public static final int directional_down=0x7f020002;
+        public static final int directional_left=0x7f020003;
+        public static final int directional_right=0x7f020004;
+        public static final int directional_up=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int pin2=0x7f020007;
+        public static final int stop=0x7f020008;
     }
     public static final class id {
-        public static final int ArrowHead=0x7f090014;
+        public static final int ArrowHead=0x7f09001b;
         public static final int CancelButton=0x7f090001;
         public static final int ConfirmButton=0x7f090000;
         public static final int ImageView=0x7f090010;
-        public static final int action_settings=0x7f09001b;
+        public static final int ImageView2=0x7f090011;
+        public static final int action_settings=0x7f090022;
         public static final int afterll=0x7f090005;
         public static final int cancel=0x7f09000d;
         public static final int choosePic=0x7f090004;
         public static final int confirm=0x7f09000c;
+        public static final int down=0x7f090014;
         public static final int enter=0x7f09000a;
         public static final int iv01=0x7f090007;
+        public static final int left=0x7f090017;
         public static final int mySurfaceView=0x7f090002;
         public static final int preDown=0x7f09000e;
         public static final int preUp=0x7f09000b;
         public static final int prell=0x7f090003;
         public static final int prell2=0x7f090008;
-        public static final int righttext=0x7f090019;
-        public static final int righttext2=0x7f09001a;
-        public static final int rlTitle=0x7f090011;
-        public static final int rlitinerary=0x7f090016;
-        public static final int rlslidemenu=0x7f090012;
+        public static final int right=0x7f090016;
+        public static final int righttext=0x7f090020;
+        public static final int righttext2=0x7f090021;
+        public static final int rlTitle=0x7f090018;
+        public static final int rlitinerary=0x7f09001d;
+        public static final int rlslidemenu=0x7f090019;
         public static final int setScale=0x7f090009;
+        public static final int stop=0x7f090013;
         public static final int surfaceView=0x7f090006;
-        public static final int topButton=0x7f090013;
-        public static final int topButton2=0x7f090017;
-        public static final int topButton3=0x7f090018;
-        public static final int topTv=0x7f090015;
+        public static final int topButton=0x7f09001a;
+        public static final int topButton2=0x7f09001e;
+        public static final int topButton3=0x7f09001f;
+        public static final int topTv=0x7f09001c;
         public static final int trim=0x7f09000f;
+        public static final int trimrl=0x7f090012;
+        public static final int up=0x7f090015;
     }
     public static final class layout {
         public static final int activity_camera=0x7f030000;

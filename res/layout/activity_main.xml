@@ -82,8 +82,7 @@
 	        android:textColor="@color/white"  
 	        android:layout_weight="1"  
 	    />
-	    
-	     <Button
+	    <Button
 	        android:id="@+id/cancel"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -112,6 +111,7 @@
 	    />
 	    
 	    </LinearLayout>
+	 
        	<ImageView 
 		  android:src="@drawable/pin2"
 		  android:id="@+id/ImageView"
@@ -120,6 +120,66 @@
 		  android:visibility="gone"
 		  android:layout_centerInParent="true"
 		/>
-        
+        <ImageView 
+		  android:src="@drawable/pin2"
+		  android:id="@+id/ImageView2"
+		  android:layout_width="wrap_content" 
+		  android:layout_height="wrap_content" 
+		  android:visibility="gone"
+		  android:layout_centerInParent="true"
+		/>
+          <RelativeLayout 
+		    android:id="@+id/trimrl"
+		    android:layout_width="fill_parent"
+		    android:layout_height="200dip"
+		    android:visibility="invisible"
+		    android:layout_above="@+id/preDown"
+		    android:layout_margin="5dip"
+		    >
+	       
+	        <ImageView 
+			  android:id="@+id/stop"
+			  android:layout_width="wrap_content" 
+			  android:layout_height="wrap_content" 
+			  android:src="@drawable/stop"
+			  android:layout_centerInParent="true"
+			/>
+	        <ImageView 
+			  android:id="@+id/down"
+			  android:layout_width="wrap_content" 
+			  android:layout_height="wrap_content" 
+			  android:src="@drawable/directional_down"
+			  android:layout_centerHorizontal="true"
+			  android:layout_below="@+id/stop"
+			/>
+	       <ImageView 
+			  android:id="@+id/up"
+			  android:layout_width="wrap_content" 
+			  android:layout_height="wrap_content" 
+			  android:src="@drawable/directional_up"
+			  android:layout_centerHorizontal="true"
+			   android:layout_above="@+id/stop"
+			/>
+	      
+	        
+	        <ImageView 
+			  android:id="@+id/right"
+			  android:layout_width="wrap_content" 
+			  android:layout_height="wrap_content" 
+			  android:src="@drawable/directional_right"
+			  android:layout_toRightOf="@+id/stop"
+			  android:layout_centerVertical="true"
+			/>
+	   
+	        <ImageView 
+			  android:id="@+id/left"
+			  android:layout_width="wrap_content" 
+			  android:layout_height="wrap_content" 
+			  android:src="@drawable/directional_left"
+			  android:layout_toLeftOf="@+id/stop"
+			  android:layout_centerVertical="true"
+			/>
+	        
+        </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

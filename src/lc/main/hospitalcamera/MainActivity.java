@@ -11,7 +11,6 @@ import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
-import android.hardware.Camera.Size;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -28,27 +27,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import lc.main.hospitalcamera.R;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback,OnTouchListener{
+	private final static int TRIM_DISTANCE = 2;
     private Button choosePic,setScale,enterBt,confirm,cancel,trim;
     private LinearLayout preLl;
     private LinearLayout preUp,preDown;
     private RelativeLayout afterLl;
     private RelativeLayout titleRl;
+    private RelativeLayout trimrl;
     ImageView imageView ;  
     private ImageView myImageView;
+    private ImageView myImageView2;
 	Camera myCamera;
 	SurfaceView mySurfaceView;
 	SurfaceHolder mySurfaceHolder;
-	//private MySurfaceView dotSurfaceView = null;
 	int mwidth;
 	int mheight;
 	private boolean mPreviewRunning= false; 
 	private int screenWidth;
 	private int screenHeight;
 	private int lastX, lastY;
+	int flagFoucs ;
+	private ImageView direction_up,direction_down,direction_left,direction_right;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,7 +60,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	}
 	
 	public void init(){
+		flagFoucs=1;
 		imageView = (ImageView)findViewById(R.id.iv01);
+		myImageView2 = (ImageView)findViewById(R.id.ImageView2);
 		choosePic = (Button)findViewById(R.id.choosePic);
 		setScale = (Button)findViewById(R.id.setScale);
 		enterBt = (Button)findViewById(R.id.enter);
@@ -70,7 +74,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		preDown = (LinearLayout)findViewById(R.id.preDown);
 		afterLl = (RelativeLayout)findViewById(R.id.afterll);
 		titleRl = (RelativeLayout)findViewById(R.id.rlTitle);
+		trimrl = (RelativeLayout)findViewById(R.id.trimrl);
 		mySurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+		direction_up = (ImageView)findViewById(R.id.up);
+		direction_down = (ImageView)findViewById(R.id.down);
+		direction_left = (ImageView)findViewById(R.id.left );
+		direction_right = (ImageView)findViewById(R.id.right);
 	    mySurfaceHolder = mySurfaceView.getHolder();//获得SurfaceHolder
 	    mySurfaceHolder.addCallback(this);
 	    mySurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -81,11 +90,17 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		ButtonEffect.setButtonStateChangeListener(confirm);
 		ButtonEffect.setButtonStateChangeListener(cancel);
 		ButtonEffect.setButtonStateChangeListener(trim);
+		ButtonEffect.setButtonStateChangeListener(direction_up);
+		ButtonEffect.setButtonStateChangeListener(direction_down);
+		ButtonEffect.setButtonStateChangeListener(direction_left);
+		ButtonEffect.setButtonStateChangeListener(direction_right);
 		this.myImageView = (ImageView) this.findViewById(R.id.ImageView);
 		this.myImageView.setOnTouchListener(this);
+		this.myImageView2.setOnTouchListener(this);
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 		screenWidth = dm.widthPixels;
 		screenHeight = dm.heightPixels - 150;
+		
 		choosePic.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -104,7 +119,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				mySurfaceView.setVisibility(View.GONE);
 				imageView.setAlpha(255);
 				myImageView.setVisibility(View.VISIBLE);
-				Toast.makeText(MainActivity.this, "请设置起始点", Toast.LENGTH_SHORT).show();
+				myImageView2.setVisibility(View.VISIBLE);
+				//Toast.makeText(MainActivity.this, "请设置起始点", Toast.LENGTH_SHORT).show();
 				preUp.setVisibility(View.VISIBLE);
 				preDown.setVisibility(View.VISIBLE);
 			}
@@ -120,7 +136,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		confirm.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				
+		
 			}
 		});
 		cancel.setOnClickListener(new OnClickListener(){
@@ -132,7 +148,79 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		trim.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				
+				trimrl.setVisibility(View.VISIBLE);
+			}
+		});
+		direction_up.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				if(flagFoucs==1){
+					int left = myImageView.getLeft() ;
+					int top = myImageView.getTop() - TRIM_DISTANCE;
+					int right = myImageView.getRight() ;
+					int bottom = myImageView.getBottom() - TRIM_DISTANCE;
+					myImageView.layout(left, top, right, bottom);
+				}else{
+					int left = myImageView2.getLeft() ;
+					int top = myImageView2.getTop() - TRIM_DISTANCE;
+					int right = myImageView2.getRight() ;
+					int bottom = myImageView2.getBottom() - TRIM_DISTANCE;
+					myImageView2.layout(left, top, right, bottom);
+				}
+			}
+		});
+		direction_down.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				if(flagFoucs==1){
+					int left = myImageView.getLeft() ;
+					int top = myImageView.getTop() + TRIM_DISTANCE;
+					int right = myImageView.getRight() ;
+					int bottom = myImageView.getBottom() + TRIM_DISTANCE;
+					myImageView.layout(left, top, right, bottom);
+				}else{
+					int left = myImageView2.getLeft() ;
+					int top = myImageView2.getTop() + TRIM_DISTANCE;
+					int right = myImageView2.getRight() ;
+					int bottom = myImageView2.getBottom() + TRIM_DISTANCE;
+					myImageView2.layout(left, top, right, bottom);
+				}
+			}
+		});
+		direction_right.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				if(flagFoucs==1){
+					int left = myImageView.getLeft()+ TRIM_DISTANCE ;
+					int top = myImageView.getTop() ;
+					int right = myImageView.getRight() + TRIM_DISTANCE;
+					int bottom = myImageView.getBottom() ;
+					myImageView.layout(left, top, right, bottom);
+				}else{
+					int left = myImageView2.getLeft()+ TRIM_DISTANCE ;
+					int top = myImageView2.getTop() ;
+					int right = myImageView2.getRight()+ TRIM_DISTANCE ;
+					int bottom = myImageView2.getBottom() ;
+					myImageView2.layout(left, top, right, bottom);
+				}
+			}
+		});
+		direction_left.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				if(flagFoucs==1){
+					int left = myImageView.getLeft()- TRIM_DISTANCE ;
+					int top = myImageView.getTop() ;
+					int right = myImageView.getRight() - TRIM_DISTANCE;
+					int bottom = myImageView.getBottom() ;
+					myImageView.layout(left, top, right, bottom);
+				}else{
+					int left = myImageView2.getLeft()- TRIM_DISTANCE ;
+					int top = myImageView2.getTop() ;
+					int right = myImageView2.getRight()- TRIM_DISTANCE ;
+					int bottom = myImageView2.getBottom() ;
+					myImageView2.layout(left, top, right, bottom);
+				}
 			}
 		});
 	}
