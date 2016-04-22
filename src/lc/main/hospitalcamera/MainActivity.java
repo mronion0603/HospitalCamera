@@ -3,7 +3,9 @@ package lc.main.hospitalcamera;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,24 +15,34 @@ import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import lc.main.hospitalcamera.R;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback,OnTouchListener{
 	private final static int TRIM_DISTANCE = 2;
+	private final static int DIALOG_MESSAGE = 1;
+	private final static int IMAGECHANGE_MESSAGE = 2;
+	private final static int IMAGE_ALPHA1 = 50;
+	private final static int IMAGE_ALPHA2 = 255;
     private Button choosePic,setScale,enterBt,confirm,cancel,trim;
     private LinearLayout preLl;
     private LinearLayout preUp,preDown;
@@ -51,6 +63,40 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	private int lastX, lastY;
 	int flagFoucs ;
 	private ImageView direction_up,direction_down,direction_left,direction_right;
+	double distance,getlength;
+	double standardLength,realLength;
+	int state = 0;  //0表示设置标准长度页面   1表示对比页面
+	boolean isTrimOn= false;
+	private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+            case DIALOG_MESSAGE:{
+                mySurfaceView.setVisibility(View.VISIBLE);
+                imageView.setAlpha(IMAGE_ALPHA1);
+                myImageView.setVisibility(View.VISIBLE);
+                myImageView2.setVisibility(View.VISIBLE);
+                preUp.setVisibility(View.VISIBLE);
+                preDown.setVisibility(View.VISIBLE);
+                trimrl.setVisibility(View.INVISIBLE);
+                state = 1;
+                isTrimOn = false;
+                myImageView.setBackgroundResource(R.drawable.pin);
+                myImageView2.setBackgroundResource(R.drawable.pin2);  
+                }break;
+            case IMAGECHANGE_MESSAGE:{
+                if(msg.arg1==1){
+                   myImageView.setBackgroundResource(R.drawable.pin2);
+                   myImageView2.setBackgroundResource(R.drawable.pin);
+                }else{
+                   myImageView.setBackgroundResource(R.drawable.pin);
+                   myImageView2.setBackgroundResource(R.drawable.pin2);  
+                }
+                }break;
+            }
+            
+        }
+    };
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,7 +106,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	}
 	
 	public void init(){
-		flagFoucs=1;
+		flagFoucs=2;
 		imageView = (ImageView)findViewById(R.id.iv01);
 		myImageView2 = (ImageView)findViewById(R.id.ImageView2);
 		choosePic = (Button)findViewById(R.id.choosePic);
@@ -75,7 +121,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		afterLl = (RelativeLayout)findViewById(R.id.afterll);
 		titleRl = (RelativeLayout)findViewById(R.id.rlTitle);
 		trimrl = (RelativeLayout)findViewById(R.id.trimrl);
-		mySurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+		mySurfaceView = (SurfaceView)findViewById(R.id.surfaceView);
 		direction_up = (ImageView)findViewById(R.id.up);
 		direction_down = (ImageView)findViewById(R.id.down);
 		direction_left = (ImageView)findViewById(R.id.left );
@@ -117,10 +163,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				enterBt.setVisibility(View.GONE);
 				titleRl.setVisibility(View.GONE);
 				mySurfaceView.setVisibility(View.GONE);
-				imageView.setAlpha(255);
+				imageView.setAlpha(IMAGE_ALPHA2);
 				myImageView.setVisibility(View.VISIBLE);
 				myImageView2.setVisibility(View.VISIBLE);
-				//Toast.makeText(MainActivity.this, "请设置起始点", Toast.LENGTH_SHORT).show();
 				preUp.setVisibility(View.VISIBLE);
 				preDown.setVisibility(View.VISIBLE);
 			}
@@ -136,7 +181,49 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		confirm.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-		
+			  if(state == 0){
+			    int x = myImageView.getLeft()- myImageView2.getLeft();
+			    int y = myImageView.getBottom()- myImageView2.getBottom();
+			    distance =Math.sqrt(x*x+y*y);
+			    if(distance>0){
+    			    AlertDialog.Builder builder =new AlertDialog.Builder(MainActivity.this);
+    	            AlertDialog customDialog;    
+    	            LayoutInflater inflater = getLayoutInflater();
+    	            final View layout = inflater.inflate(R.layout.dialog_set, (ViewGroup) findViewById(R.id.addcourse_dialog));
+    	            builder.setTitle("设置长度单位");
+    	            builder.setView(layout);
+    	            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+    	                public void onClick(DialogInterface arg0, int arg1) {
+    	                    EditText setdistance =(EditText)layout.findViewById(R.id.addcourse1);
+    	                    getlength = Double.parseDouble(setdistance.getText().toString());
+    	                    System.out.println(getlength);
+    	                    if(getlength>0){
+    	                    standardLength = getlength/distance;
+    	                    Toast.makeText(getApplication(), "设置长度成功", Toast.LENGTH_SHORT).show();
+    	                    handler.sendEmptyMessage(DIALOG_MESSAGE);
+    	                    }else{
+    	                    Toast.makeText(getApplication(), "标准长度不能为负数", Toast.LENGTH_SHORT).show();     
+    	                    }
+    	                }
+    	            });
+    	            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {      
+    	                @Override
+    	                public void onClick(DialogInterface arg0, int arg1) {
+    	                    
+    	                }
+    	            });
+    	            customDialog = builder.create();
+    	            customDialog.show();
+			    }else{
+			        Toast.makeText(getApplication(), "请先设置标尺", Toast.LENGTH_SHORT).show();
+			    }
+			  }else if(state == 1){
+			    int x = myImageView.getLeft()- myImageView2.getLeft();
+	            int y = myImageView.getBottom()- myImageView2.getBottom();
+	            distance =Math.sqrt(x*x+y*y);
+	            realLength = distance*standardLength;
+	            Toast.makeText(getApplication(), "实际长度为"+realLength+"毫米", Toast.LENGTH_SHORT).show();
+	          }
 			}
 		});
 		cancel.setOnClickListener(new OnClickListener(){
@@ -148,7 +235,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		trim.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				trimrl.setVisibility(View.VISIBLE);
+				
+				if(isTrimOn){
+				    isTrimOn = false;
+				    trimrl.setVisibility(View.INVISIBLE);
+				}else{
+				    isTrimOn = true;
+				    trimrl.setVisibility(View.VISIBLE);
+				}
 			}
 		});
 		direction_up.setOnClickListener(new OnClickListener(){
@@ -230,6 +324,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		case MotionEvent.ACTION_DOWN:
 			lastX = (int) event.getRawX();
 			lastY = (int) event.getRawY();
+			if(v.equals(myImageView)){
+			    flagFoucs=1;
+			    Message msg = new Message();
+			    msg.what = IMAGECHANGE_MESSAGE;
+			    msg.arg1 = flagFoucs;
+			    handler.sendMessage(msg);
+			}else if(v.equals(myImageView2)){
+			    flagFoucs=2;
+			    Message msg = new Message();
+                msg.what = IMAGECHANGE_MESSAGE;
+                msg.arg1 = flagFoucs;
+                handler.sendMessage(msg);
+			}
 			break;
 		case MotionEvent.ACTION_MOVE:
 			int dx = (int) event.getRawX() - lastX;
@@ -287,7 +394,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
                 WindowManager wm = this.getWindowManager();
                 int width = wm.getDefaultDisplay().getWidth();
                 int height = wm.getDefaultDisplay().getHeight();
-                int degree = getDegree(bitmap );
+                int degree = getDegree(bitmap);
                 Bitmap smallBitmap;
                 if(bitmap.getWidth()<=bitmap.getHeight()){
                  smallBitmap = zoomHImage(bitmap,width);
@@ -398,4 +505,5 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
         myCamera = null;  
 	}  
 
+	
 }

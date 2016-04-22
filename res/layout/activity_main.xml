@@ -62,7 +62,7 @@
 	        android:layout_margin="20dip"
 	        android:text="@string/enter" 
 	        android:textColor="@color/white"  
-	       
+	        
 	    />
 	    </LinearLayout>
 	   <LinearLayout 
@@ -91,6 +91,7 @@
 	        android:text="@string/cancel" 
 	        android:textColor="@color/white"   
 	        android:layout_weight="1" 
+	        android:visibility="gone"
 	    />
 	    </LinearLayout>
 	    <LinearLayout 
@@ -113,7 +114,7 @@
 	    </LinearLayout>
 	 
        	<ImageView 
-		  android:src="@drawable/pin2"
+		  android:background="@drawable/pin"
 		  android:id="@+id/ImageView"
 		  android:layout_width="wrap_content" 
 		  android:layout_height="wrap_content" 
@@ -121,7 +122,7 @@
 		  android:layout_centerInParent="true"
 		/>
         <ImageView 
-		  android:src="@drawable/pin2"
+		  android:background="@drawable/pin2"
 		  android:id="@+id/ImageView2"
 		  android:layout_width="wrap_content" 
 		  android:layout_height="wrap_content" 
