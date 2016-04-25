@@ -143,6 +143,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		this.myImageView = (ImageView) this.findViewById(R.id.ImageView);
 		this.myImageView.setOnTouchListener(this);
 		this.myImageView2.setOnTouchListener(this);
+		//RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(  
+	    //            150, 50);  
+		
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 		screenWidth = dm.widthPixels;
 		screenHeight = dm.heightPixels - 150;
@@ -223,7 +226,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	            distance =Math.sqrt(x*x+y*y);
 	            realLength = distance*standardLength;
 	            Toast.makeText(getApplication(), "实际长度为"+realLength+"毫米", Toast.LENGTH_SHORT).show();
-	          }
+	            afterLl.addView(new LineView(MainActivity.this,myImageView.getLeft(),myImageView.getBottom()
+	                    ,myImageView2.getLeft(),myImageView2.getBottom()));
+			  }
 			}
 		});
 		cancel.setOnClickListener(new OnClickListener(){
@@ -317,6 +322,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				}
 			}
 		});
+		  
+		
 	}
 	
 	public boolean onTouch(View v, MotionEvent event) {
@@ -368,7 +375,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				top = bottom - v.getHeight();
 			}
 			v.layout(left, top, right, bottom);
-
+			/*
+			 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v  
+                     .getLayoutParams();  
+             layoutParams.leftMargin = left;  
+             layoutParams.topMargin = top;  
+             layoutParams.rightMargin = -right;  
+             layoutParams.bottomMargin = -bottom;  
+             v.setLayoutParams(layoutParams); 
+			*/
 			lastX = (int) event.getRawX();
 			lastY = (int) event.getRawY();
 
@@ -376,6 +391,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		case MotionEvent.ACTION_UP:
 			break;
 		}
+		afterLl.invalidate();  
 		return true;
 	}
 	
