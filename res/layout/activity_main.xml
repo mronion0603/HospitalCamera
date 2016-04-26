@@ -180,7 +180,15 @@
 			  android:layout_toLeftOf="@+id/stop"
 			  android:layout_centerVertical="true"
 			/>
-	        
+	         
+		    </RelativeLayout>
+		    <RelativeLayout 
+		    android:id="@+id/InnerAfterll"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		  
+		  
+		    >
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

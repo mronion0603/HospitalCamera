@@ -9,6 +9,6 @@
     <string name="setscale">设置标度尺</string>
     <string name="enter">直接使用</string>
     <string name="confirm">确定</string>
-    <string name="cancel">取消</string>
+    <string name="cancel">重置</string>
     <string name="trim">微调</string>
 </resources>

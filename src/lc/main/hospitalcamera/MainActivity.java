@@ -2,6 +2,9 @@ package lc.main.hospitalcamera;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -19,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -46,7 +50,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
     private Button choosePic,setScale,enterBt,confirm,cancel,trim;
     private LinearLayout preLl;
     private LinearLayout preUp,preDown;
-    private RelativeLayout afterLl;
+    private RelativeLayout afterLl,innerAfterLl;
     private RelativeLayout titleRl;
     private RelativeLayout trimrl;
     ImageView imageView ;  
@@ -72,6 +76,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
     final static int IMAGE_SIZE = 72; 
     final static int MARGIN_SIZE = 50; 
     final static int MARGIN_SIZE2 = 250; 
+   
+ 
 	private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -87,7 +93,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
                 state = 1;
                 isTrimOn = false;
                 myImageView.setBackgroundResource(R.drawable.pin);
-                myImageView2.setBackgroundResource(R.drawable.pin2);  
+                myImageView2.setBackgroundResource(R.drawable.pin2);
+                cancel.setVisibility(View.VISIBLE);
                 }break;
             case IMAGECHANGE_MESSAGE:{
                 if(msg.arg1==1){
@@ -124,6 +131,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		preUp = (LinearLayout)findViewById(R.id.preUp);
 		preDown = (LinearLayout)findViewById(R.id.preDown);
 		afterLl = (RelativeLayout)findViewById(R.id.afterll);
+		innerAfterLl= (RelativeLayout)findViewById(R.id.InnerAfterll);
 		titleRl = (RelativeLayout)findViewById(R.id.rlTitle);
 		trimrl = (RelativeLayout)findViewById(R.id.trimrl);
 		mySurfaceView = (SurfaceView)findViewById(R.id.surfaceView);
@@ -245,9 +253,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			    int x = myImageView.getLeft()- myImageView2.getLeft();
 	            int y = myImageView.getBottom()- myImageView2.getBottom();
 	            distance =Math.sqrt(x*x+y*y);
-	            realLength = distance*standardLength;
-	            Toast.makeText(getApplication(), "实际长度为"+realLength+"毫米", Toast.LENGTH_SHORT).show();
-	            afterLl.addView(new LineView(MainActivity.this,myImageView.getLeft(),myImageView.getBottom()
+	            realLength += distance*standardLength;
+	            BigDecimal   b   =   new   BigDecimal(realLength);   //保留两位有效数字
+	            realLength   =   b.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();  
+	            
+	         
+	             Toast.makeText(getApplication(), "实际长度为"+realLength+"毫米", Toast.LENGTH_LONG).show();
+	            innerAfterLl.addView(new LineView(MainActivity.this,myImageView.getLeft(),myImageView.getBottom()
 	                    ,myImageView2.getLeft(),myImageView2.getBottom()));
 			  }
 			}
@@ -255,7 +267,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		cancel.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				
+			    innerAfterLl.removeAllViews();
+			    realLength = 0;
 			}
 		});
 		trim.setOnClickListener(new OnClickListener(){
@@ -347,6 +360,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		
 	}
 	
+
 	public boolean onTouch(View v, MotionEvent event) {
 	    final int X = (int) event.getRawX();  
         final int Y = (int) event.getRawY(); 
