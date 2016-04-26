@@ -67,6 +67,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	double standardLength,realLength;
 	int state = 0;  //0表示设置标准长度页面   1表示对比页面
 	boolean isTrimOn= false;
+	private int _xDelta;  
+    private int _yDelta;  
+    final static int IMAGE_SIZE = 72; 
+    final static int MARGIN_SIZE = 50; 
+    final static int MARGIN_SIZE2 = 250; 
 	private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -143,8 +148,24 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		this.myImageView = (ImageView) this.findViewById(R.id.ImageView);
 		this.myImageView.setOnTouchListener(this);
 		this.myImageView2.setOnTouchListener(this);
-		//RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(  
-	    //            150, 50);  
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(  
+		        IMAGE_SIZE, IMAGE_SIZE);  
+		
+	    layoutParams.leftMargin = MARGIN_SIZE;  
+	    layoutParams.topMargin = MARGIN_SIZE;  
+	    layoutParams.bottomMargin = -MARGIN_SIZE2;  
+	    layoutParams.rightMargin = -MARGIN_SIZE2;  
+	    
+	    myImageView.setLayoutParams(layoutParams);  
+	    RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(  
+	            IMAGE_SIZE, IMAGE_SIZE);  
+	    
+        layoutParams2.leftMargin = MARGIN_SIZE;  
+        layoutParams2.topMargin = MARGIN_SIZE;  
+        layoutParams2.bottomMargin = -MARGIN_SIZE2;  
+        layoutParams2.rightMargin = -MARGIN_SIZE2;  
+        
+        myImageView2.setLayoutParams(layoutParams2); 
 		
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 		screenWidth = dm.widthPixels;
@@ -327,10 +348,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	}
 	
 	public boolean onTouch(View v, MotionEvent event) {
+	    final int X = (int) event.getRawX();  
+        final int Y = (int) event.getRawY(); 
+      
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			lastX = (int) event.getRawX();
 			lastY = (int) event.getRawY();
+			
+            RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v  
+                    .getLayoutParams();  
+            _xDelta = X - lParams.leftMargin;  
+            _yDelta = Y - lParams.topMargin;  
+            //System.out.println(X+":"+Y+":"+_xDelta+":"+_yDelta);
 			if(v.equals(myImageView)){
 			    flagFoucs=1;
 			    Message msg = new Message();
@@ -346,6 +376,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
+		    /*
 			int dx = (int) event.getRawX() - lastX;
 			int dy = (int) event.getRawY() - lastY;
 
@@ -375,18 +406,28 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				top = bottom - v.getHeight();
 			}
 			v.layout(left, top, right, bottom);
-			/*
-			 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v  
-                     .getLayoutParams();  
-             layoutParams.leftMargin = left;  
-             layoutParams.topMargin = top;  
-             layoutParams.rightMargin = -right;  
-             layoutParams.bottomMargin = -bottom;  
-             v.setLayoutParams(layoutParams); 
 			*/
-			lastX = (int) event.getRawX();
-			lastY = (int) event.getRawY();
+		    int dx = (int) event.getRawX() - lastX;
+            int dy = (int) event.getRawY() - lastY;
 
+            int left = v.getLeft() + dx;
+            int top = v.getTop() + dy;
+		    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v  
+            .getLayoutParams();  
+		    
+            layoutParams.leftMargin = X - _xDelta;  
+            layoutParams.topMargin = Y - _yDelta;  
+            //layoutParams.rightMargin = X;  
+            //layoutParams.bottomMargin = Y; 
+            layoutParams.height=IMAGE_SIZE;
+            layoutParams.width = IMAGE_SIZE;
+            layoutParams.leftMargin =left;  
+            layoutParams.topMargin =top;  
+           // System.out.println(layoutParams.leftMargin+":"+layoutParams.topMargin+":"
+           //         +layoutParams.rightMargin+":"+layoutParams.bottomMargin);
+            v.setLayoutParams(layoutParams);
+            lastX = (int) event.getRawX();
+            lastY = (int) event.getRawY();
 			break;
 		case MotionEvent.ACTION_UP:
 			break;
