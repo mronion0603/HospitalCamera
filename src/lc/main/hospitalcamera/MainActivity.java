@@ -2,8 +2,6 @@ package lc.main.hospitalcamera;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,7 +20,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -45,7 +42,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	private final static int TRIM_DISTANCE = 2;
 	private final static int DIALOG_MESSAGE = 1;
 	private final static int IMAGECHANGE_MESSAGE = 2;
-	private final static int IMAGE_ALPHA1 = 50;
+	private final static int IMAGE_ALPHA1 = 125;
 	private final static int IMAGE_ALPHA2 = 255;
     private Button choosePic,setScale,enterBt,confirm,cancel,trim;
     private LinearLayout preLl;
@@ -156,28 +153,27 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		this.myImageView = (ImageView) this.findViewById(R.id.ImageView);
 		this.myImageView.setOnTouchListener(this);
 		this.myImageView2.setOnTouchListener(this);
-		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(  
-		        IMAGE_SIZE, IMAGE_SIZE);  
-		
-	    layoutParams.leftMargin = MARGIN_SIZE;  
-	    layoutParams.topMargin = MARGIN_SIZE;  
-	    layoutParams.bottomMargin = -MARGIN_SIZE2;  
-	    layoutParams.rightMargin = -MARGIN_SIZE2;  
-	    
-	    myImageView.setLayoutParams(layoutParams);  
-	    RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(  
-	            IMAGE_SIZE, IMAGE_SIZE);  
-	    
-        layoutParams2.leftMargin = MARGIN_SIZE;  
-        layoutParams2.topMargin = MARGIN_SIZE;  
-        layoutParams2.bottomMargin = -MARGIN_SIZE2;  
-        layoutParams2.rightMargin = -MARGIN_SIZE2;  
-        
-        myImageView2.setLayoutParams(layoutParams2); 
 		
 		DisplayMetrics dm = getResources().getDisplayMetrics();
 		screenWidth = dm.widthPixels;
 		screenHeight = dm.heightPixels - 150;
+		
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(  
+		        IMAGE_SIZE, IMAGE_SIZE);  
+		
+	    layoutParams.leftMargin = screenWidth/2;  
+	    layoutParams.topMargin = screenHeight/2;  
+	   
+	    myImageView.setLayoutParams(layoutParams);  
+	    RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(  
+	            IMAGE_SIZE, IMAGE_SIZE);  
+	    
+        layoutParams2.leftMargin = screenWidth/2;  
+        layoutParams2.topMargin = screenHeight/2;  
+     
+        myImageView2.setLayoutParams(layoutParams2); 
+		
+		
 		
 		choosePic.setOnClickListener(new OnClickListener(){
 			@Override
@@ -257,8 +253,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	            BigDecimal   b   =   new   BigDecimal(realLength);   //保留两位有效数字
 	            realLength   =   b.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();  
 	            
-	         
-	             Toast.makeText(getApplication(), "实际长度为"+realLength+"毫米", Toast.LENGTH_LONG).show();
+	            Toast.makeText(getApplication(), "实际长度为"+realLength+"毫米", Toast.LENGTH_LONG).show();
 	            innerAfterLl.addView(new LineView(MainActivity.this,myImageView.getLeft(),myImageView.getBottom()
 	                    ,myImageView2.getLeft(),myImageView2.getBottom()));
 			  }
