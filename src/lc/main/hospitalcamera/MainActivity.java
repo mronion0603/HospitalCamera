@@ -283,17 +283,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			@Override
 			public void onClick(View arg0) {
 				if(flagFoucs==1){
-					int left = myImageView.getLeft() ;
-					int top = myImageView.getTop() - TRIM_DISTANCE;
-					int right = myImageView.getRight() ;
-					int bottom = myImageView.getBottom() - TRIM_DISTANCE;
-					myImageView.layout(left, top, right, bottom);
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) myImageView 
+				            .getLayoutParams();  
+				    layoutParams.topMargin = layoutParams.topMargin-TRIM_DISTANCE;  
+				    layoutParams.height=IMAGE_SIZE;
+				    layoutParams.width = IMAGE_SIZE;
+				    myImageView.setLayoutParams(layoutParams);
 				}else{
-					int left = myImageView2.getLeft() ;
-					int top = myImageView2.getTop() - TRIM_DISTANCE;
-					int right = myImageView2.getRight() ;
-					int bottom = myImageView2.getBottom() - TRIM_DISTANCE;
-					myImageView2.layout(left, top, right, bottom);
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) myImageView2 
+				            .getLayoutParams();  
+				    layoutParams.topMargin = layoutParams.topMargin-TRIM_DISTANCE;  
+				    layoutParams.height=IMAGE_SIZE;
+				    layoutParams.width = IMAGE_SIZE;
+				    myImageView2.setLayoutParams(layoutParams);
 				}
 			}
 		});
@@ -301,17 +303,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			@Override
 			public void onClick(View arg0) {
 				if(flagFoucs==1){
-					int left = myImageView.getLeft() ;
-					int top = myImageView.getTop() + TRIM_DISTANCE;
-					int right = myImageView.getRight() ;
-					int bottom = myImageView.getBottom() + TRIM_DISTANCE;
-					myImageView.layout(left, top, right, bottom);
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) myImageView 
+				            .getLayoutParams();  
+				    layoutParams.topMargin = layoutParams.topMargin+TRIM_DISTANCE;  
+				    layoutParams.height=IMAGE_SIZE;
+				    layoutParams.width = IMAGE_SIZE;
+				    myImageView.setLayoutParams(layoutParams);
 				}else{
-					int left = myImageView2.getLeft() ;
-					int top = myImageView2.getTop() + TRIM_DISTANCE;
-					int right = myImageView2.getRight() ;
-					int bottom = myImageView2.getBottom() + TRIM_DISTANCE;
-					myImageView2.layout(left, top, right, bottom);
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) myImageView2 
+				            .getLayoutParams();  
+				    layoutParams.topMargin = layoutParams.topMargin+TRIM_DISTANCE;  
+				    layoutParams.height=IMAGE_SIZE;
+				    layoutParams.width = IMAGE_SIZE;
+				    myImageView2.setLayoutParams(layoutParams);
 				}
 			}
 		});
@@ -319,17 +323,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			@Override
 			public void onClick(View arg0) {
 				if(flagFoucs==1){
-					int left = myImageView.getLeft()+ TRIM_DISTANCE ;
-					int top = myImageView.getTop() ;
-					int right = myImageView.getRight() + TRIM_DISTANCE;
-					int bottom = myImageView.getBottom() ;
-					myImageView.layout(left, top, right, bottom);
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) myImageView 
+				            .getLayoutParams();  
+				    layoutParams.leftMargin = layoutParams.leftMargin +TRIM_DISTANCE;  
+				    layoutParams.height=IMAGE_SIZE;
+				    layoutParams.width = IMAGE_SIZE;
+				    myImageView.setLayoutParams(layoutParams);
 				}else{
-					int left = myImageView2.getLeft()+ TRIM_DISTANCE ;
-					int top = myImageView2.getTop() ;
-					int right = myImageView2.getRight()+ TRIM_DISTANCE ;
-					int bottom = myImageView2.getBottom() ;
-					myImageView2.layout(left, top, right, bottom);
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) myImageView2 
+				            .getLayoutParams();  
+				    layoutParams.leftMargin = layoutParams.leftMargin +TRIM_DISTANCE;  
+				    layoutParams.height=IMAGE_SIZE;
+				    layoutParams.width = IMAGE_SIZE;
+				    myImageView2.setLayoutParams(layoutParams);
 				}
 			}
 		});
@@ -337,17 +343,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			@Override
 			public void onClick(View arg0) {
 				if(flagFoucs==1){
-					int left = myImageView.getLeft()- TRIM_DISTANCE ;
-					int top = myImageView.getTop() ;
-					int right = myImageView.getRight() - TRIM_DISTANCE;
-					int bottom = myImageView.getBottom() ;
-					myImageView.layout(left, top, right, bottom);
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) myImageView 
+				            .getLayoutParams();  
+				    layoutParams.leftMargin = layoutParams.leftMargin -TRIM_DISTANCE;  
+				    layoutParams.height=IMAGE_SIZE;
+				    layoutParams.width = IMAGE_SIZE;
+				    myImageView.setLayoutParams(layoutParams);			
 				}else{
-					int left = myImageView2.getLeft()- TRIM_DISTANCE ;
-					int top = myImageView2.getTop() ;
-					int right = myImageView2.getRight()- TRIM_DISTANCE ;
-					int bottom = myImageView2.getBottom() ;
-					myImageView2.layout(left, top, right, bottom);
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) myImageView2 
+				            .getLayoutParams();  
+				    layoutParams.leftMargin = layoutParams.leftMargin -TRIM_DISTANCE;  
+				    layoutParams.height=IMAGE_SIZE;
+				    layoutParams.width = IMAGE_SIZE;
+				    myImageView2.setLayoutParams(layoutParams);
 				}
 			}
 		});
