@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	private final static int TRIM_DISTANCE = 2;
 	private final static int DIALOG_MESSAGE = 1;
 	private final static int IMAGECHANGE_MESSAGE = 2;
-	private final static int IMAGE_ALPHA1 = 125;
+	private final static int IMAGE_ALPHA1 = 100;
 	private final static int IMAGE_ALPHA2 = 255;
     private Button choosePic,setScale,enterBt,confirm,cancel,trim;
     private LinearLayout preLl;
@@ -477,7 +477,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
                 }
                 smallBitmap = rotateBitmap(smallBitmap,degree) ;
                 imageView.setImageBitmap(smallBitmap);  
-                imageView.setAlpha(50);
+                imageView.setAlpha(IMAGE_ALPHA1);
                 
             } catch (FileNotFoundException e) {  
                 Log.e("Exception", e.getMessage(),e);  
