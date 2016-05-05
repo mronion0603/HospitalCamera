@@ -54,15 +54,16 @@ public final class R {
     }
     public static final class drawable {
         public static final int background_selector=0x7f020000;
-        public static final int btn2=0x7f020001;
-        public static final int directional_down=0x7f020002;
-        public static final int directional_left=0x7f020003;
-        public static final int directional_right=0x7f020004;
-        public static final int directional_up=0x7f020005;
-        public static final int ic_launcher=0x7f020006;
-        public static final int pin=0x7f020007;
-        public static final int pin2=0x7f020008;
-        public static final int stop=0x7f020009;
+        public static final int bg1=0x7f020001;
+        public static final int btn2=0x7f020002;
+        public static final int directional_down=0x7f020003;
+        public static final int directional_left=0x7f020004;
+        public static final int directional_right=0x7f020005;
+        public static final int directional_up=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int pin=0x7f020008;
+        public static final int pin2=0x7f020009;
+        public static final int stop=0x7f02000a;
     }
     public static final class id {
         public static final int ArrowHead=0x7f09001e;
