@@ -3,6 +3,9 @@ package lc.main.hospitalcamera;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+
+import com.gc.materialdesign.views.ButtonFloat;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -45,7 +48,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	private final static int IMAGE_ALPHA1 = 100;
 	private final static int IMAGE_ALPHA2 = 255;
     private Button choosePic,setScale,enterBt,confirm,cancel,trim;
-    private LinearLayout preLl;
+    private RelativeLayout preLl;
     private LinearLayout preUp,preDown;
     private RelativeLayout afterLl,innerAfterLl;
     private RelativeLayout titleRl;
@@ -74,7 +77,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
     final static int MARGIN_SIZE = 50; 
     final static int MARGIN_SIZE2 = 250; 
    
- 
+    ButtonFloat buttonfloat;
 	private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -118,13 +121,14 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		flagFoucs=2;
 		imageView = (ImageView)findViewById(R.id.iv01);
 		myImageView2 = (ImageView)findViewById(R.id.ImageView2);
+		buttonfloat = (ButtonFloat)findViewById(R.id.buttonFloat);
 		choosePic = (Button)findViewById(R.id.choosePic);
 		setScale = (Button)findViewById(R.id.setScale);
 		enterBt = (Button)findViewById(R.id.enter);
 		confirm = (Button)findViewById(R.id.confirm);
 		cancel = (Button)findViewById(R.id.cancel);
 		trim = (Button)findViewById(R.id.trim);
-		preLl = (LinearLayout)findViewById(R.id.prell);
+		preLl = (RelativeLayout)findViewById(R.id.prell);
 		preUp = (LinearLayout)findViewById(R.id.preUp);
 		preDown = (LinearLayout)findViewById(R.id.preDown);
 		afterLl = (RelativeLayout)findViewById(R.id.afterll);
@@ -174,7 +178,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
         myImageView2.setLayoutParams(layoutParams2); 
 		
 		
-		
+        buttonfloat.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent();
+                intent.setType("image/*");  
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, 1);  
+			}
+		});
 		choosePic.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
