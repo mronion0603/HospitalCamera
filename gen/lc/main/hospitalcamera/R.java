@@ -234,17 +234,16 @@ containing a value of this type.
         public static final int float_button1_shadowp=0x7f020013;
         public static final int float_button_shadow1=0x7f020014;
         public static final int ic_action_choose=0x7f020015;
-        public static final int ic_action_new=0x7f020016;
-        public static final int ic_launcher=0x7f020017;
-        public static final int ic_reloj_max=0x7f020018;
-        public static final int pin=0x7f020019;
-        public static final int pin2=0x7f02001a;
-        public static final int selector_list=0x7f02001b;
-        public static final int shadow_down=0x7f02001c;
-        public static final int shadow_right=0x7f02001d;
-        public static final int sprite_check=0x7f02001e;
-        public static final int stop=0x7f02001f;
-        public static final int transparent_backgrouns=0x7f020020;
+        public static final int ic_launcher=0x7f020016;
+        public static final int ic_reloj_max=0x7f020017;
+        public static final int pin=0x7f020018;
+        public static final int pin2=0x7f020019;
+        public static final int selector_list=0x7f02001a;
+        public static final int shadow_down=0x7f02001b;
+        public static final int shadow_right=0x7f02001c;
+        public static final int sprite_check=0x7f02001d;
+        public static final int stop=0x7f02001e;
+        public static final int transparent_backgrouns=0x7f02001f;
     }
     public static final class id {
         public static final int ArrowHead=0x7f0a002d;
