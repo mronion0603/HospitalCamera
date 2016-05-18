@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	private final static int IMAGECHANGE_MESSAGE = 2;
 	private final static int IMAGE_ALPHA1 = 100;
 	private final static int IMAGE_ALPHA2 = 255;
-    private Button choosePic,setScale,enterBt,btRotate,confirm,cancel,trim;
+    private Button choosePic,setScale,enterBt,btRotate,btTurn,confirm,cancel,trim;
     private RelativeLayout preLl;
     private LinearLayout preUp,preDown;
     private RelativeLayout afterLl,innerAfterLl;
@@ -121,6 +121,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		flagFoucs=2;
 		imageView = (ImageView)findViewById(R.id.iv01);
 		myImageView2 = (ImageView)findViewById(R.id.ImageView2);
+		btTurn = (Button)findViewById(R.id.turn);
 		btRotate = (Button)findViewById(R.id.rotate);
 		buttonfloat = (ButtonFloat)findViewById(R.id.buttonFloat);
 		choosePic = (Button)findViewById(R.id.choosePic);
@@ -144,6 +145,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	    mySurfaceHolder = mySurfaceView.getHolder();//获得SurfaceHolder
 	    mySurfaceHolder.addCallback(this);
 	    mySurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+	    ButtonEffect.setButtonStateChangeListener(btTurn);
 	    ButtonEffect.setButtonStateChangeListener(btRotate);
 		ButtonEffect.setButtonStateChangeListener(choosePic);
 		ButtonEffect.setButtonStateChangeListener(setScale);
@@ -203,6 +205,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				setScale.setVisibility(View.GONE);
 				enterBt.setVisibility(View.GONE);
 				btRotate.setVisibility(View.GONE);
+				btTurn.setVisibility(View.GONE);
 				titleRl.setVisibility(View.GONE);
 				mySurfaceView.setVisibility(View.GONE);
 				imageView.setAlpha(IMAGE_ALPHA2);
@@ -218,6 +221,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				setScale.setVisibility(View.GONE);
 				enterBt.setVisibility(View.GONE);
 				titleRl.setVisibility(View.GONE);
+				btRotate.setVisibility(View.GONE);
+				btTurn.setVisibility(View.GONE);
 			}
 		});
 		btRotate.setOnClickListener(new OnClickListener(){
@@ -228,8 +233,23 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				imageView.setDrawingCacheEnabled(true);
 				Bitmap bitmap = imageView.getDrawingCache();  
 				bitmap = rotateBitmap(bitmap,mdegree);
+				//bitmap = turnBitmap(bitmap);
                 imageView.setImageBitmap(bitmap);  
                 imageView.setAlpha(IMAGE_ALPHA1);
+                imageView.setDrawingCacheEnabled(false);
+			}
+		});
+		btTurn.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				imageView.setAlpha(IMAGE_ALPHA2);
+				imageView.setDrawingCacheEnabled(true);
+				Bitmap bitmap = imageView.getDrawingCache();  
+				//bitmap = rotateBitmap(bitmap,mdegree);
+				bitmap = turnBitmap(bitmap);
+                imageView.setImageBitmap(bitmap);  
+                imageView.setAlpha(IMAGE_ALPHA1);
+                imageView.setDrawingCacheEnabled(false);
 			}
 		});
 		confirm.setOnClickListener(new OnClickListener(){
@@ -565,7 +585,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
         mtx.postRotate(rotate);  
         return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);  
     }
-
+	private static Bitmap turnBitmap(Bitmap bitmap){  
+        if(bitmap == null)  
+            return null ;  
+        int w = bitmap.getWidth();  
+        int h = bitmap.getHeight();    
+        // Setting post rotate to 90  
+        Matrix mtx = new Matrix();  
+        mtx.setScale(-1, 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);  
+    }
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int format, int width,
 			int height) {

@@ -12,4 +12,5 @@
     <string name="cancel">重置</string>
     <string name="trim">微调</string>
     <string name="rotate">旋转图片</string>
+    <string name="turn">翻转图片</string>
 </resources>
