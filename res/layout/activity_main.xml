@@ -103,7 +103,7 @@
 	        android:layout_margin="10dip"
 	        android:text="@string/rotate" 
 	        android:textColor="@color/white"  
-	       
+	        android:visibility="gone"
 	    />
 	    <Button
 	        android:id="@+id/turn"
@@ -156,6 +156,16 @@
 	        android:visibility="gone"
 	    />
 	    </LinearLayout>
+	     <TextView
+	        android:id="@+id/distance"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/preUp"
+	        android:layout_margin="20dip"
+	        android:text="@string/distance" 
+	        android:textColor="@android:color/holo_red_light"
+	        android:visibility="gone"
+	    />
 	    <LinearLayout 
 	    android:id="@+id/preDown"
 	    android:layout_width="match_parent"
@@ -221,7 +231,7 @@
 			  android:layout_height="wrap_content" 
 			  android:src="@drawable/directional_up"
 			  android:layout_centerHorizontal="true"
-			   android:layout_above="@+id/stop"
+			  android:layout_above="@+id/stop"
 			/>
 	      
 	        

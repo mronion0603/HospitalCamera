@@ -1,5 +1,7 @@
 package lc.main.hospitalcamera;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -38,6 +40,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import lc.main.hospitalcamera.R;
 
@@ -56,6 +59,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
     ImageView imageView ;  
     private ImageView myImageView;
     private ImageView myImageView2;
+    private TextView tvDistance;
 	Camera myCamera;
 	SurfaceView mySurfaceView;
 	SurfaceHolder mySurfaceHolder;
@@ -78,6 +82,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
     final static int MARGIN_SIZE2 = 250; 
     boolean retatebool = false;
     ButtonFloat buttonfloat;
+    
 	private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -90,6 +95,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
                 preUp.setVisibility(View.VISIBLE);
                 preDown.setVisibility(View.VISIBLE);
                 trimrl.setVisibility(View.INVISIBLE);
+                tvDistance.setVisibility(View.VISIBLE);
                 state = 1;
                 isTrimOn = false;
                 myImageView.setBackgroundResource(R.drawable.pin);
@@ -142,6 +148,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		direction_down = (ImageView)findViewById(R.id.down);
 		direction_left = (ImageView)findViewById(R.id.left );
 		direction_right = (ImageView)findViewById(R.id.right);
+		tvDistance= (TextView)findViewById(R.id.distance);
 	    mySurfaceHolder = mySurfaceView.getHolder();//获得SurfaceHolder
 	    mySurfaceHolder.addCallback(this);
 	    mySurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -302,6 +309,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	            Toast.makeText(getApplication(), "实际长度为"+realLength+"毫米", Toast.LENGTH_LONG).show();
 	            innerAfterLl.addView(new LineView(MainActivity.this,myImageView.getLeft(),myImageView.getBottom()
 	                    ,myImageView2.getLeft(),myImageView2.getBottom()));
+	            tvDistance.setText(realLength+"毫米");
 			  }
 			}
 		});
@@ -310,6 +318,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			public void onClick(View arg0) {
 			    innerAfterLl.removeAllViews();
 			    realLength = 0;
+			    tvDistance.setText(realLength+"毫米");
 			}
 		});
 		trim.setOnClickListener(new OnClickListener(){
@@ -439,37 +448,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			}
 			break;
 		case MotionEvent.ACTION_MOVE:
-		    /*
-			int dx = (int) event.getRawX() - lastX;
-			int dy = (int) event.getRawY() - lastY;
-
-			int left = v.getLeft() + dx;
-			int top = v.getTop() + dy;
-			int right = v.getRight() + dx;
-			int bottom = v.getBottom() + dy;
-          
-			// 设置不能出界
-			if (left < 0) {
-				left = 0;
-				right = left + v.getWidth();
-			}
-
-			if (right > screenWidth) {
-				right = screenWidth;
-				left = right - v.getWidth();
-			}
-
-			if (top < 0) {
-				top = 0;
-				bottom = top + v.getHeight();
-			}
-
-			if (bottom > screenHeight) {
-				bottom = screenHeight;
-				top = bottom - v.getHeight();
-			}
-			v.layout(left, top, right, bottom);
-			*/
+		 
 		    int dx = (int) event.getRawX() - lastX;
             int dy = (int) event.getRawY() - lastY;
 
@@ -486,8 +465,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
             layoutParams.width = IMAGE_SIZE;
             layoutParams.leftMargin =left;  
             layoutParams.topMargin =top;  
-           // System.out.println(layoutParams.leftMargin+":"+layoutParams.topMargin+":"
-           //         +layoutParams.rightMargin+":"+layoutParams.bottomMargin);
+
             v.setLayoutParams(layoutParams);
             lastX = (int) event.getRawX();
             lastY = (int) event.getRawY();
@@ -514,17 +492,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
                 WindowManager wm = this.getWindowManager();
                 int width = wm.getDefaultDisplay().getWidth();
                 int height = wm.getDefaultDisplay().getHeight();
+                //System.out.println("width:"+width+" height："+height);
                 int degree = getDegree(bitmap);
                 Bitmap smallBitmap;
                 if(bitmap.getWidth()<=bitmap.getHeight()){
                  smallBitmap = zoomHImage(bitmap,width);
                 }else{
                  smallBitmap = zoomVImage(bitmap,width);
-                }
+                }             
                 smallBitmap = rotateBitmap(smallBitmap,degree) ;
                 imageView.setImageBitmap(smallBitmap);  
                 imageView.setAlpha(IMAGE_ALPHA1);
-                
+              
             } catch (FileNotFoundException e) {  
                 Log.e("Exception", e.getMessage(),e);  
             } catch (Exception e) {  
@@ -548,6 +527,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	    matrix.postScale(scaleHeight, scaleHeight);
 	    Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width,
 	                    (int) height, matrix, true);
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+	    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);  //压缩图片质量50%
+	    ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中  
+        bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片  
 	    return bitmap;
     	
 	}
