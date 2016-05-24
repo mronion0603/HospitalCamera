@@ -331,6 +331,7 @@ containing a value of this type.
         public static final int confirm=0x7f060007;
         public static final int distance=0x7f06000c;
         public static final int enter=0x7f060006;
+        public static final int exitalert=0x7f06000d;
         public static final int hello_world=0x7f060001;
         public static final int name=0x7f060003;
         public static final int rotate=0x7f06000a;

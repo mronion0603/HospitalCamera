@@ -166,6 +166,7 @@ int string choosepic 0x7f060004
 int string confirm 0x7f060007
 int string distance 0x7f06000c
 int string enter 0x7f060006
+int string exitalert 0x7f06000d
 int string hello_world 0x7f060001
 int string name 0x7f060003
 int string rotate 0x7f06000a

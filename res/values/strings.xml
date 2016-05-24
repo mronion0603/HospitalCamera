@@ -14,4 +14,5 @@
     <string name="rotate">旋转图片</string>
     <string name="turn">翻转图片</string>
     <string name="distance">0毫米</string>
+    <string name="exitalert">再按一次退出</string>
 </resources>

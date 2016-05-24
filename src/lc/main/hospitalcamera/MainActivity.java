@@ -50,6 +50,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	private final static int IMAGECHANGE_MESSAGE = 2;
 	private final static int IMAGE_ALPHA1 = 100;
 	private final static int IMAGE_ALPHA2 = 255;
+	private final static int ORIGIN_STATE = 1;
+	private final static int SECOND_STATE = 2;
+	private final static int THIRD_STATE = 3;
+	private final static int FORTH_STATE = 4;
+	private final static int FIFTH_STATE = 5;
+	private int appState;
     private Button choosePic,setScale,enterBt,btRotate,btTurn,confirm,cancel,trim;
     private RelativeLayout preLl;
     private LinearLayout preUp,preDown;
@@ -82,12 +88,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
     final static int MARGIN_SIZE2 = 250; 
     boolean retatebool = false;
     ButtonFloat buttonfloat;
-    
+    private long waitTime = 3000;  ////退出按钮等待时间
+    private long touchTime = 0;    //退出按钮记录按下时间    
+    int mlastX=0;
+    int mlastY=0;
 	private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case DIALOG_MESSAGE:{
+            	appState = FIFTH_STATE;
                 mySurfaceView.setVisibility(View.VISIBLE);
                 imageView.setAlpha(IMAGE_ALPHA1);
                 myImageView.setVisibility(View.VISIBLE);
@@ -124,6 +134,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	}
 	
 	public void init(){
+		appState = ORIGIN_STATE;
 		flagFoucs=2;
 		imageView = (ImageView)findViewById(R.id.iv01);
 		myImageView2 = (ImageView)findViewById(R.id.ImageView2);
@@ -209,6 +220,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		setScale.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
+				appState = FORTH_STATE;
 				setScale.setVisibility(View.GONE);
 				enterBt.setVisibility(View.GONE);
 				btRotate.setVisibility(View.GONE);
@@ -225,6 +237,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		enterBt.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
+				appState = THIRD_STATE;
 				setScale.setVisibility(View.GONE);
 				enterBt.setVisibility(View.GONE);
 				titleRl.setVisibility(View.GONE);
@@ -277,7 +290,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
     	                public void onClick(DialogInterface arg0, int arg1) {
     	                    EditText setdistance =(EditText)layout.findViewById(R.id.addcourse1);
     	                    getlength = Double.parseDouble(setdistance.getText().toString());
-    	                    System.out.println(getlength);
+    	                    //System.out.println(getlength);
     	                    if(getlength>0){
     	                    standardLength = getlength/distance;
     	                    Toast.makeText(getApplication(), "设置长度成功", Toast.LENGTH_SHORT).show();
@@ -301,6 +314,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 			  }else if(state == 1){
 			    int x = myImageView.getLeft()- myImageView2.getLeft();
 	            int y = myImageView.getBottom()- myImageView2.getBottom();
+	            if(mlastX!=x||mlastY!=y||realLength==0){
 	            distance =Math.sqrt(x*x+y*y);
 	            realLength += distance*standardLength;
 	            BigDecimal   b   =   new   BigDecimal(realLength);   //保留两位有效数字
@@ -310,6 +324,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	            innerAfterLl.addView(new LineView(MainActivity.this,myImageView.getLeft(),myImageView.getBottom()
 	                    ,myImageView2.getLeft(),myImageView2.getBottom()));
 	            tvDistance.setText(realLength+"毫米");
+	            mlastX = x;
+	            mlastY = y;
+	            }
 			  }
 			}
 		});
@@ -414,11 +431,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 				}
 			}
 		});
-		  
-		
 	}
 	
-
 	public boolean onTouch(View v, MotionEvent event) {
 	    final int X = (int) event.getRawX();  
         final int Y = (int) event.getRawY(); 
@@ -480,6 +494,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	@Override  
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
         if (resultCode == RESULT_OK) {  
+        	appState = SECOND_STATE;
             Uri uri = data.getData();  
             
             preLl.setVisibility(View.GONE);
@@ -616,6 +631,61 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
         myCamera.release();  
         myCamera = null;  
 	}  
-
+	   @Override  
+	    public void onBackPressed() { 
+		   switch(appState){
+		       case ORIGIN_STATE:
+			   long currentTime = System.currentTimeMillis();  
+		        if((currentTime-touchTime)>=waitTime) {  
+		            Toast.makeText(this, MainActivity.this.getString(R.string.exitalert), Toast.LENGTH_SHORT).show();  
+		            touchTime = currentTime;  
+		        }else {  
+		            finish();  
+		        }  
+			   break;
+		       case SECOND_STATE:
+		    	   preLl.setVisibility(View.VISIBLE);
+		           afterLl.setVisibility(View.GONE);
+		           appState = ORIGIN_STATE;
+				   break;
+		       case THIRD_STATE:
+		    	   appState = SECOND_STATE;
+				   setScale.setVisibility(View.VISIBLE);
+				   enterBt.setVisibility(View.VISIBLE);
+				   titleRl.setVisibility(View.VISIBLE);
+				   //btRotate.setVisibility(View.VISIBLE);
+				   btTurn.setVisibility(View.VISIBLE);
+		    	   break;
+		       case FORTH_STATE:
+		    	   appState = SECOND_STATE;
+		    	   setScale.setVisibility(View.VISIBLE);
+					enterBt.setVisibility(View.VISIBLE);
+					//btRotate.setVisibility(View.VISIBLE);
+					btTurn.setVisibility(View.VISIBLE);
+					titleRl.setVisibility(View.VISIBLE);
+					mySurfaceView.setVisibility(View.VISIBLE);
+					imageView.setAlpha(IMAGE_ALPHA1);
+					myImageView.setVisibility(View.GONE);
+					myImageView2.setVisibility(View.GONE);
+					preUp.setVisibility(View.GONE);
+					preDown.setVisibility(View.GONE);
+					trimrl.setVisibility(View.INVISIBLE);
+		    	   break;
+		       case FIFTH_STATE:
+		    	    appState = FORTH_STATE;
+	                imageView.setAlpha(IMAGE_ALPHA2);
+	                trimrl.setVisibility(View.INVISIBLE);
+	                tvDistance.setVisibility(View.GONE);
+	                state = 0;
+	                isTrimOn = false;
+	                myImageView.setBackgroundResource(R.drawable.pin);
+	                myImageView2.setBackgroundResource(R.drawable.pin2);
+	                cancel.setVisibility(View.GONE);
+	                innerAfterLl.removeAllViews();
+				    realLength = 0;
+		    	   break;
+		   }
+	        
+	    }  
 	
 }
