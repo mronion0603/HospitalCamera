@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -503,7 +504,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
             ContentResolver cr = this.getContentResolver();  
         
             try {  
-                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));  
+            	Bitmap bitmap;
+            	if(uri!=null){
+                   bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));  
+            	}else{
+            		Bundle extras = data.getExtras();  
+                    //if (extras != null) {  
+                        //这里是有些拍照后的图片是直接存放到Bundle中的所以我们可以从这里面获取Bitmap图片  
+                    	bitmap = extras.getParcelable("data");  
+                    //}  
+            	}
                 WindowManager wm = this.getWindowManager();
                 int width = wm.getDefaultDisplay().getWidth();
                 int height = wm.getDefaultDisplay().getHeight();
@@ -544,8 +554,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	                    (int) height, matrix, true);
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
 	    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);  //压缩图片质量50%
+	    if( baos.toByteArray().length / 1024>1024) {//判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出    
+	       baos.reset();//重置baos即清空baos  
+	       bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);//这里压缩50%，把压缩后的数据存放到baos中    
+	    }  
 	    ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中  
         bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片  
+        System.out.println("length:"+baos.toByteArray().length / 1024);
+        try {
+			baos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	    return bitmap;
     	
 	}
@@ -562,6 +582,20 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 	    matrix.postScale(scaleWidth, scaleWidth);
 	    Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width,
 	                    (int) height, matrix, true);
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+	    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);  //压缩图片质量50%
+	    if( baos.toByteArray().length / 1024>1024) {//判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出    
+	       baos.reset();//重置baos即清空baos  
+	       bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);//这里压缩50%，把压缩后的数据存放到baos中    
+	    }  
+	    ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中  
+        bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片  
+        System.out.println("length:"+baos.toByteArray().length / 1024);
+        try {
+			baos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	    return bitmap;
     }
 	
