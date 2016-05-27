@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import com.gc.materialdesign.views.ButtonFloat;
+
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -88,7 +88,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
     final static int MARGIN_SIZE = 50; 
     final static int MARGIN_SIZE2 = 250; 
     boolean retatebool = false;
-    ButtonFloat buttonfloat;
+   // ButtonFloat buttonfloat;
     private long waitTime = 3000;  ////退出按钮等待时间
     private long touchTime = 0;    //退出按钮记录按下时间    
     int mlastX=0;
@@ -141,7 +141,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
 		myImageView2 = (ImageView)findViewById(R.id.ImageView2);
 		btTurn = (Button)findViewById(R.id.turn);
 		btRotate = (Button)findViewById(R.id.rotate);
-		buttonfloat = (ButtonFloat)findViewById(R.id.buttonFloat);
+		//buttonfloat = (ButtonFloat)findViewById(R.id.buttonFloat);
 		choosePic = (Button)findViewById(R.id.choosePic);
 		setScale = (Button)findViewById(R.id.setScale);
 		enterBt = (Button)findViewById(R.id.enter);
@@ -199,7 +199,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
      
         myImageView2.setLayoutParams(layoutParams2); 
 		
-		
+		/*
         buttonfloat.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -209,6 +209,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback,OnT
                 startActivityForResult(intent, 1);  
 			}
 		});
+		*/
 		choosePic.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {

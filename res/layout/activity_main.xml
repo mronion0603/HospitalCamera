@@ -24,35 +24,7 @@
         android:textColor="@color/white"    
  
     />
-    <com.gc.materialdesign.views.ButtonFloat
-                android:id="@+id/buttonFloat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="24dp"
-                android:background="@color/floatbuttoncolor"
-                materialdesign:animate="true"
-                materialdesign:iconDrawable="@drawable/ic_action_choose" 
-                 android:visibility="gone"
-                />
-     
-            <com.gc.materialdesign.views.Card
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-			    android:layout_alignParentRight="true"
-			     android:visibility="gone"
-                android:background="#ffffff" >
-                 <ImageView
-			        android:id="@+id/ivbg"
-			        android:layout_width="100dip"
-			        android:layout_height="200dip"
-			        android:background="@drawable/bg2"
-			        android:layout_margin="5dip"
-			        /> 
-                
-            </com.gc.materialdesign.views.Card>
+    
       
     
     </RelativeLayout>
@@ -208,7 +180,7 @@
 		    android:visibility="invisible"
 		    android:layout_above="@+id/preDown"
 		    android:layout_margin="5dip"
-		    android:layout_alignParentRight="true"
+		    android:layout_alignParentLeft="true"
 		    >
 	       
 	        <ImageView 
